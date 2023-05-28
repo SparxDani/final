@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileQueue : MonoBehaviour
+public class ProjectileQueue : 
 {
     public GameObject projectilePrefab;
     public float delayBetweenProjectiles = 3f;
