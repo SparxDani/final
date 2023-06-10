@@ -1,32 +1,56 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using System.Collections;
 
 public class GameController : MonoBehaviour
 {
-    SimplyLinkList<GameObject> bullet;
-    [SerializeField] GameObject bulletPrefab;
+    [SerializeField] private GameObject[] bulletPrefabs = new GameObject[5];
+    private SimplyLinkList<GameObject> bullet;
+    private bool canShoot = true;
+    private InputAction fireAction;
+
     private void Awake()
     {
         bullet = new SimplyLinkList<GameObject>();
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < bulletPrefabs.Length; i++)
         {
-            bullet.AddNodeAtStart(bulletPrefab);
+            bullet.AddNodeAtEnd(bulletPrefabs[i]);
         }
     }
-    void Start()
+
+    private void OnEnable()
     {
-        GameObject newProjectile = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-        bullet.AddNodeAtStart(newProjectile);
-        bullet.PrintAllNodes();
+        // Obtener la referencia a la acción "Fire" del nuevo sistema de entrada
+        fireAction = new InputAction("Fire", binding: "<Keyboard>/p");
+        fireAction.Enable();
+        fireAction.started += OnFireStarted;
     }
-    private void CreateNewProjectile()
+
+    private void OnDisable()
     {
-        
+        // Deshabilitar y liberar la acción "Fire" del nuevo sistema de entrada
+        fireAction.Disable();
+        fireAction.started -= OnFireStarted;
+        fireAction.Dispose();
     }
-    // Update is called once per frame
-    void Update()
+
+    private void OnFireStarted(InputAction.CallbackContext context)
     {
-        
+        if (canShoot && bullet.GetCapacity() > 0)
+        {
+            GameObject bulletObject = bullet.RemoveFirst();
+            // Disparar el proyectil
+            // ...
+
+            // Esperar 3 segundos para poder disparar nuevamente
+            StartCoroutine(StartCooldown());
+        }
+    }
+
+    private IEnumerator StartCooldown()
+    {
+        canShoot = false;
+        yield return new WaitForSeconds(3f);
+        canShoot = true;
     }
 }

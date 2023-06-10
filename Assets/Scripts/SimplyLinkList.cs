@@ -9,54 +9,83 @@ public class SimplyLinkList<T>
     {
         public T Value { get; set; }
         public Node Next { get; set; }
+
         public Node(T value)
         {
             Value = value;
             Next = null;
         }
     }
+
     Node Head { get; set; }
-    int Count = 0;
+    public int Count { get; private set; }
+
     public void AddNodeAtStart(T value)
     {
         Node newNode = new Node(value);
+
         if (Head == null)
         {
             Head = newNode;
-            Count = Count + 1;
         }
-        else if (Head != null)
+        else
         {
-            Node tmp = Head;
+            newNode.Next = Head;
             Head = newNode;
-            Head.Next = tmp;
-            Count = Count + 1;
         }
+
+        Count++;
     }
 
-    internal void Add(GameObject newProjectile)
+    public void Add(T value)
     {
-        throw new NotImplementedException();
+        AddNodeAtStart(value);
+    }
+
+    public T RemoveFirst()
+    {
+        if (Head == null)
+        {
+            throw new InvalidOperationException("List is empty");
+        }
+
+        T value = Head.Value;
+        Head = Head.Next;
+        Count--;
+        return value;
+    }
+
+    public T GetFirst()
+    {
+        if (Head == null)
+        {
+            throw new InvalidOperationException("List is empty");
+        }
+
+        return Head.Value;
     }
 
     public void AddNodeAtEnd(T value)
     {
+        Node newNode = new Node(value);
+
         if (Head == null)
         {
-            AddNodeAtStart(value);
+            Head = newNode;
         }
-        else if (Head != null)
+        else
         {
             Node tmp = Head;
             while (tmp.Next != null)
             {
                 tmp = tmp.Next;
             }
-            Node newNode = new Node(value);
             tmp.Next = newNode;
-            Count = Count + 1;
         }
+
+        Count++;
     }
+
     public void AddNodeAtPosition(T value, int position)
     {
         if (position == 0)
@@ -69,79 +98,90 @@ public class SimplyLinkList<T>
         }
         else if (position > Count)
         {
-            //Console.WriteLine("No se puede");
+            // Console.WriteLine("No se puede");
         }
         else
         {
             int currentPosition = 0;
             Node tmp = Head;
+
             while (currentPosition < position - 1)
             {
                 tmp = tmp.Next;
-                currentPosition = currentPosition + 1;
+                currentPosition++;
             }
+
             Node nodeAtPosition = tmp.Next;
             Node newNode = new Node(value);
             tmp.Next = newNode;
             newNode.Next = nodeAtPosition;
-            Count = Count + 1;
+
+            Count++;
         }
     }
+
     public void ModifyAtStart(T value)
     {
-        if (Head == null)
-        {
-            //Console.WriteLine("No se puede");
-        }
-        else
+        if (Head != null)
         {
             Head.Value = value;
         }
     }
+
     public void ModifyAtEnd(T value)
     {
         Node tmp = Head;
-        while (tmp.Next != null)
+        while (tmp != null && tmp.Next != null)
         {
             tmp = tmp.Next;
         }
-        tmp.Value = value;
+
+        if (tmp != null)
+        {
+            tmp.Value = value;
+        }
     }
+
     public void ModifyAtPosition(T value, int position)
     {
         if (position == 0)
         {
             ModifyAtStart(value);
         }
-        else if (position == Count - 2)
+        else if (position == Count - 1)
         {
             ModifyAtEnd(value);
         }
-        else if (position > Count)
+        else if (position >= Count)
         {
-            //Console.WriteLine("No se puede");
+            // Console.WriteLine("No se puede");
         }
         else
         {
             int iterator = 0;
             Node tmp = Head;
-            while (iterator < Count)
+
+            while (iterator < position && tmp != null)
             {
-                iterator = iterator + 1;
                 tmp = tmp.Next;
+                iterator++;
             }
-            tmp.Value = value;
+
+            if (tmp != null)
+            {
+                tmp.Value = value;
+            }
         }
     }
+
     public void PrintAllNodes()
     {
         Node tmp = Head;
         while (tmp != null)
         {
-           Debug.Log(tmp.Value + " ");
+            Debug.Log(tmp.Value + " ");
             tmp = tmp.Next;
         }
-        //Console.WriteLine();
     }
 
     public int GetCapacity()
@@ -156,6 +196,7 @@ public class SimplyLinkList<T>
         {
             tmp = tmp.Next;
         }
+
         if (tmp != null && tmp.Next != null)
         {
             return tmp.Next.Value;
@@ -165,6 +206,7 @@ public class SimplyLinkList<T>
             return default(T);
         }
     }
+
     public bool FindValue(T value)
     {
         Node tmp = Head;
@@ -172,15 +214,47 @@ public class SimplyLinkList<T>
         {
             tmp = tmp.Next;
         }
+
         if (tmp != null)
         {
-           // Console.WriteLine("Se encontró el elemento");
             return true;
         }
         else
         {
-            //Console.WriteLine("No se encontró el elemento");
             return false;
         }
+    }
+
+    public void Remove(T value)
+    {
+        if (Head == null)
+        {
+            return;
+        }
+
+        if (Head.Value.Equals(value))
+        {
+            Head = Head.Next;
+            Count--;
+            return;
+        }
+
+        Node tmp = Head;
+        while (tmp.Next != null && !tmp.Next.Value.Equals(value))
+        {
+            tmp = tmp.Next;
+        }
+
+        if (tmp.Next != null)
+        {
+            tmp.Next = tmp.Next.Next;
+            Count--;
+        }
+    }
+
+    public void Clear()
+    {
+        Head = null;
+        Count = 0;
     }
 }
