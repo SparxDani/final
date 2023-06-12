@@ -21,7 +21,7 @@ public class GameController : MonoBehaviour
     private void OnEnable()
     {
         // Obtener la referencia a la acción "Fire" del nuevo sistema de entrada
-        fireAction = new InputAction("Fire", binding: "<Keyboard>/p");
+        fireAction = new InputAction(binding: "<Keyboard>/p");
         fireAction.Enable();
         fireAction.started += OnFireStarted;
     }
@@ -52,5 +52,12 @@ public class GameController : MonoBehaviour
         canShoot = false;
         yield return new WaitForSeconds(3f);
         canShoot = true;
+    }
+    private void Update()
+    {
+        if (!canShoot)
+        {
+
+        }
     }
 }
