@@ -20,7 +20,6 @@ public class GameController : MonoBehaviour
 
     private void OnEnable()
     {
-        // Obtener la referencia a la acción "Fire" del nuevo sistema de entrada
         fireAction = new InputAction(binding: "<Keyboard>/p");
         fireAction.Enable();
         fireAction.started += OnFireStarted;
@@ -28,7 +27,6 @@ public class GameController : MonoBehaviour
 
     private void OnDisable()
     {
-        // Deshabilitar y liberar la acción "Fire" del nuevo sistema de entrada
         fireAction.Disable();
         fireAction.started -= OnFireStarted;
         fireAction.Dispose();
@@ -39,10 +37,7 @@ public class GameController : MonoBehaviour
         if (canShoot && bullet.GetCapacity() > 0)
         {
             GameObject bulletObject = bullet.RemoveFirst();
-            // Disparar el proyectil
-            // ...
-
-            // Esperar 3 segundos para poder disparar nuevamente
+            
             StartCoroutine(StartCooldown());
         }
     }

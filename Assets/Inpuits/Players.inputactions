@@ -7,9 +7,9 @@
             "actions": [
                 {
                     "name": "Skills",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "aca06698-694a-45ef-b078-e48d270e322d",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -17,26 +17,59 @@
             ],
             "bindings": [
                 {
-                    "name": "",
-                    "id": "8ca74f77-8085-4394-b2a0-c740c9566d95",
-                    "path": "<Keyboard>/p",
+                    "name": "2D Vector",
+                    "id": "c6f4f2c5-a3ee-47bd-be84-7adca65572a6",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Skills",
-                    "isComposite": false,
+                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "16a99b74-e402-4119-bfe3-e116e53e95dd",
-                    "path": "<Keyboard>/o",
+                    "name": "up",
+                    "id": "b2140b26-01c5-431f-86a7-2252ade0b9c9",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Skills",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "ea5bfa3a-d694-4396-90e8-08637b02279a",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skills",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "d4eed230-4998-41f7-93d1-ff09e9b6ee53",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skills",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "f597f21d-a20a-472b-b9e2-6589f0e45c96",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skills",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }
