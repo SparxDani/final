@@ -11,11 +11,12 @@ public class CharacterBase : MonoBehaviour
     public LayerMask groundLayer;
 
     private float horizontal;
-    private bool isJumping = false; // Variable para controlar si el personaje está saltando
+    private bool isJumping = false;
     private bool isFacingRight = true;
+    private int jumpsRemaining = 2;
 
     public float speed = 8f;
-    public float JumpingPower = 16f;
+    public float JumpingPower = 9.5f;
 
     private void Awake()
     {
@@ -38,10 +39,17 @@ public class CharacterBase : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.performed && IsGrounded() && !isJumping)
+        if (context.performed && IsGrounded())
         {
             rb.velocity = new Vector2(rb.velocity.x, JumpingPower);
-            isJumping = true; // Marcamos que el personaje está saltando
+            isJumping = true;
+            jumpsRemaining = 1;
+        }
+        else if (context.performed && jumpsRemaining > 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, JumpingPower);
+            isJumping = true;
+            jumpsRemaining--;
         }
         else if (context.canceled && rb.velocity.y > 0f)
         {
@@ -56,10 +64,10 @@ public class CharacterBase : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Restablecer la capacidad de saltar cuando el personaje toca el suelo
         if (collision.collider.CompareTag("Ground"))
         {
             isJumping = false;
+            jumpsRemaining = 2;
         }
     }
 
