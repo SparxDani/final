@@ -2,16 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterClass 
+[System.Serializable]
+[CreateAssetMenu(fileName = "New Character", menuName = "Character")]
+public class CharacterClass : ScriptableObject
 {
-    string nombre;
-    float speed;
-    private Rigidbody2D myRB;
 
-    private void Movement()
-    {
+    public string characterName;
+    public Sprite characterSprite;
+    public Sprite characterIcon;
 
-    }
 
-    
 }
