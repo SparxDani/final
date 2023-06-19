@@ -158,8 +158,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 223.05}
-  m_SizeDelta: {x: 211.9, y: 99.63}
+  m_AnchoredPosition: {x: -118, y: -14}
+  m_SizeDelta: {x: 411.4, y: 262.32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &131239838
 MonoBehaviour:
@@ -200,6 +200,10 @@ MonoBehaviour:
   characters:
     serializedList:
     - {fileID: 11400000, guid: 1d18d0a30fbd7224e99a733b6e697a19, type: 2}
+    - {fileID: 11400000, guid: e726b7494b5fe2441a893a5e6e8d1dc9, type: 2}
+    - {fileID: 11400000, guid: 1d0559a0c8171514d8154dc503d0fe5d, type: 2}
+    - {fileID: 11400000, guid: e726b7494b5fe2441a893a5e6e8d1dc9, type: 2}
+    - {fileID: 11400000, guid: e726b7494b5fe2441a893a5e6e8d1dc9, type: 2}
     - {fileID: 11400000, guid: e726b7494b5fe2441a893a5e6e8d1dc9, type: 2}
   characterCell: {fileID: 1518450411981782, guid: 5aa555603dd948740ab817bf54041d1e, type: 3}
 --- !u!1 &675869996
