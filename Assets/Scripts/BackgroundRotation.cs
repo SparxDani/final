@@ -9,9 +9,7 @@ public class BackgroundRotation : MonoBehaviour
     void Update()
     {
         float rotationAngle = rotationSpeed * Time.deltaTime;
-
         Quaternion rotation = Quaternion.Euler(0f, 0f, rotationAngle);
-
         transform.rotation *= rotation;
     }
 }
