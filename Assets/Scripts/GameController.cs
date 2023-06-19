@@ -3,15 +3,15 @@ using UnityEngine.InputSystem;
 using System.Collections;
 
 public class GameController : MonoBehaviour
-{
+{/* 
     [SerializeField] private GameObject[] bulletPrefabs = new GameObject[5];
-    private SimplyLinkList<GameObject> bullet;
+    private SimplyLinkedList<GameObject> bullet;
     private bool canShoot = true;
     private InputAction fireAction;
 
     private void Awake()
     {
-        bullet = new SimplyLinkList<GameObject>();
+        bullet = new SimplyLinkedList<GameObject>();
         for (int i = 0; i < bulletPrefabs.Length; i++)
         {
             bullet.AddNodeAtEnd(bulletPrefabs[i]);
@@ -32,7 +32,7 @@ public class GameController : MonoBehaviour
         fireAction.Dispose();
     }
 
-    private void OnFireStarted(InputAction.CallbackContext context)
+   private void OnFireStarted(InputAction.CallbackContext context)
     {
         if (canShoot && bullet.GetCapacity() > 0)
         {
@@ -55,4 +55,5 @@ public class GameController : MonoBehaviour
 
         }
     }
+    */
 }

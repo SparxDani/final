@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-[CreateAssetMenu(fileName = "New Character", menuName = "Character")]
+[CreateAssetMenu(fileName = "Nuevo Personaje", menuName = "Personaje")]
 public class CharacterClass : ScriptableObject
 {
 
