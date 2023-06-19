@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CharacterBase : MonoBehaviour
-{
+{   
+    //Declaración de variables
     public Rigidbody2D rb;
     public Transform groundCheck;
     public LayerMask groundLayer;
