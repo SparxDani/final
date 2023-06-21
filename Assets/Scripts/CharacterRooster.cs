@@ -32,10 +32,17 @@ public class CharacterRooster : MonoBehaviour
         GameObject charCell = Instantiate(characterCell, transform);
         charCell.name = character.characterName;
         Image artwork = charCell.transform.Find("artwork").GetComponent<Image>();
-        TextMeshProUGUI name = charCell.transform.Find("nameRect").GetComponentInChildren<TextMeshProUGUI>();
+        TextMeshProUGUI name = charCell.transform.Find("nameCell").GetComponentInChildren<TextMeshProUGUI>();
         artwork.sprite = character.characterSprite;
         name.text = character.characterName;
+        artwork.GetComponent<RectTransform>().pivot = uiPivot(artwork.sprite);
+        //artwork.GetComponent<RectTransform>().sizeDelta *= character.zoom;
 
-        
+    }
+    public Vector2 uiPivot(Sprite sprite)
+    {
+        Vector2 pixelSize = new Vector2(sprite.texture.width, sprite.texture.height);
+        Vector2 pixelPivot = sprite.pivot;
+        return new Vector2(pixelPivot.x / pixelSize.x, pixelPivot.y / pixelSize.y);
     }
 }
