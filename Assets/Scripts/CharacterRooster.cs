@@ -31,7 +31,7 @@ public class CharacterRooster : MonoBehaviour
     {
         GameObject charCell = Instantiate(characterCell, transform);
         charCell.name = character.characterName;
-        Image artwork = charCell.transform.Find("artwork").GetComponent<Image>();
+        Image artwork = charCell.transform.Find("sprite").GetComponent<Image>();
         TextMeshProUGUI name = charCell.transform.Find("nameCell").GetComponentInChildren<TextMeshProUGUI>();
         artwork.sprite = character.characterSprite;
         name.text = character.characterName;
