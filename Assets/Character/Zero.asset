@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Zero
   m_EditorClassIdentifier: 
   characterName: Zero
-  characterSprite: {fileID: 0}
-  characterIcon: {fileID: 0}
+  characterSprite: {fileID: 21300000, guid: 8e825b5c828523e4a915f76381a46262, type: 3}
+  characterIcon: {fileID: 21300000, guid: 8e825b5c828523e4a915f76381a46262, type: 3}

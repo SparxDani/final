@@ -5,26 +5,27 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CharacterBase : MonoBehaviour
-{   
-    //Declaración de variables
-    public Rigidbody2D rb;
-    public Transform groundCheck;
-    public LayerMask groundLayer;
+{
+    protected Rigidbody2D rb;
+    protected Transform groundCheck;
+    protected LayerMask groundLayer;
 
-    private float horizontal;
-    private bool isJumping = false;
-    private bool isFacingRight = true;
-    private int jumpsRemaining = 2;
+    protected float horizontal;
+    protected bool isJumping = false;
+    protected bool isFacingRight = true;
+    protected int jumpsRemaining = 2;
 
-    public float speed = 8f;
-    public float JumpingPower = 9.5f;
+    [SerializeField] protected float speed = 8f;
+    [SerializeField] protected float jumpingPower = 9.5f;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        groundCheck = transform.Find("GroundCheck");
+        groundLayer = LayerMask.GetMask("Ground");
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
 
@@ -38,17 +39,17 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public void Jump(InputAction.CallbackContext context)
+    public virtual void Jump(InputAction.CallbackContext context)
     {
         if (context.performed && IsGrounded())
         {
-            rb.velocity = new Vector2(rb.velocity.x, JumpingPower);
+            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
             isJumping = true;
             jumpsRemaining = 1;
         }
         else if (context.performed && jumpsRemaining > 0)
         {
-            rb.velocity = new Vector2(rb.velocity.x, JumpingPower);
+            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
             isJumping = true;
             jumpsRemaining--;
         }
@@ -58,12 +59,12 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    private bool IsGrounded()
+    protected virtual bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheck.position, 0f, groundLayer);
+        return Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Ground"))
         {
@@ -72,7 +73,7 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    private void Flip()
+    protected virtual void Flip()
     {
         isFacingRight = !isFacingRight;
         Vector3 localScale = transform.localScale;
@@ -80,7 +81,7 @@ public class CharacterBase : MonoBehaviour
         transform.localScale = localScale;
     }
 
-    public void Move(InputAction.CallbackContext context)
+    public virtual void Move(InputAction.CallbackContext context)
     {
         horizontal = context.ReadValue<Vector2>().x;
     }

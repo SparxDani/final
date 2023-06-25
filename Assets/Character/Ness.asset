@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88bafe35097731b4b82a5f9d20321df9, type: 3}
-  m_Name: Nuevo Personaje
+  m_Name: Ness
   m_EditorClassIdentifier: 
-  characterName: luis
-  characterSprite: {fileID: 0}
-  characterIcon: {fileID: 0}
+  characterName: Ness
+  characterSprite: {fileID: 21300000, guid: 3747be4222db9d241b114f6ba86954f8, type: 3}
+  characterIcon: {fileID: 21300000, guid: 5e0c87b3ebd11c1429825df86ff11ced, type: 3}
+  zoom: 1
