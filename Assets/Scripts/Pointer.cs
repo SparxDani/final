@@ -24,8 +24,7 @@ public class Pointer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //CONFIRM
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             if (currentCharacter != null)
             {
@@ -34,8 +33,8 @@ public class Pointer : MonoBehaviour
             }
         }
 
-        //CANCEL
-        if (Input.GetKeyDown(KeyCode.X))
+        
+        if (Input.GetKeyDown(KeyCode.O))
         {
             CharacterRooster.instance.confirmedCharacter = null;
             TokenFollow(true);
@@ -59,7 +58,6 @@ public class Pointer : MonoBehaviour
                 {
                     if (currentCharacter != null)
                     {
-                        //currentCharacter.Find("selectedBorder").GetComponent<Image>().DOKill();
                         currentCharacter.Find("selectedBorder").GetComponent<Image>().color = Color.clear;
                     }
                     SetCurrentCharacter(raycastCharacter);
@@ -69,7 +67,6 @@ public class Pointer : MonoBehaviour
             {
                 if (currentCharacter != null)
                 {
-                    //currentCharacter.Find("selectedBorder").GetComponent<Image>().DOKill();
                     currentCharacter.Find("selectedBorder").GetComponent<Image>().color = Color.clear;
                     SetCurrentCharacter(null);
                 }
@@ -85,7 +82,6 @@ public class Pointer : MonoBehaviour
         {
             Color color = new Color(255f, 0f, 60f, 255f);
             t.Find("selectedBorder").GetComponent<Image>().color = color;
-            //t.Find("selectedBorder").GetComponent<Image>().DOColor(Color.red, .7f).SetLoops(-1);
         }
 
 

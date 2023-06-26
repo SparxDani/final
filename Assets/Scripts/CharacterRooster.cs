@@ -104,7 +104,6 @@ public class CharacterRooster : MonoBehaviour
         if (confirmedCharacter == null)
         {
             confirmedCharacter = character;
-            //playerSlotsContainer.GetChild(player).DOPunchPosition(Vector3.down * 3, .3f, 10, 1);
         }
     }
 

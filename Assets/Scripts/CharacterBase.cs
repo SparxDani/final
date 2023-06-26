@@ -18,14 +18,14 @@ public class CharacterBase : MonoBehaviour
     [SerializeField] protected float speed = 8f;
     [SerializeField] protected float jumpingPower = 9.5f;
 
-    protected virtual void Awake()
+    protected void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         groundCheck = transform.Find("GroundCheck");
         groundLayer = LayerMask.GetMask("Ground");
     }
 
-    protected virtual void Update()
+    protected void Update()
     {
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
 
@@ -39,7 +39,7 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public virtual void Jump(InputAction.CallbackContext context)
+    public  void Jump(InputAction.CallbackContext context)
     {
         if (context.performed && IsGrounded())
         {
@@ -59,12 +59,12 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    protected virtual bool IsGrounded()
+    protected  bool IsGrounded()
     {
         return Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
     }
 
-    protected virtual void OnCollisionEnter2D(Collision2D collision)
+    protected  void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Ground"))
         {

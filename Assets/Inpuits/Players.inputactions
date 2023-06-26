@@ -98,13 +98,22 @@
             "id": "c720b33d-5d1d-4edb-809d-efcee721e51a",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Navigation",
                     "type": "Value",
                     "id": "21126551-ac24-4676-a1e1-23dfcc8fbfb6",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Actions",
+                    "type": "Button",
+                    "id": "dd170309-670b-4c7c-9062-886946955e7d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -115,7 +124,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Navigation",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -126,7 +135,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Navigation",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -137,7 +146,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Navigation",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -148,7 +157,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Navigation",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -159,9 +168,31 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Navigation",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "3c19e83b-31a4-45fa-9a63-c6a12216ce27",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Actions",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "950a2ef8-e36a-4714-8853-c6b003dd0cee",
+                    "path": "<Keyboard>/o",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Actions",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

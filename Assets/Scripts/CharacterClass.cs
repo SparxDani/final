@@ -6,10 +6,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Nuevo Personaje", menuName = "Personaje")]
 public class CharacterClass : ScriptableObject
 {
-
     public string characterName;
     public Sprite characterSprite;
     public Sprite characterIcon;
     public float zoom = 2;
-
 }
