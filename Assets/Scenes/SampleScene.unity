@@ -730,7 +730,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 712424099}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f27ccfe09f12f74cac884174f7881bc, type: 3}
   m_Name: 
@@ -739,7 +739,7 @@ MonoBehaviour:
   groundCheck: {fileID: 2091212576}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   horizontal: 0
   speed: 8
   JumpingPower: 9.5
@@ -750,7 +750,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 712424099}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 697100c8712584b48af287d71585ea06, type: 3}
   m_Name: 
@@ -772,13 +772,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 712424099}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec4f3a9ef69f5a54b96aaea85df3fe94, type: 3}
+  m_Script: {fileID: 11500000, guid: a38ddde39c5f56e43ba91cb4133a25fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dashTime: 1
-  dashForce: 100
+  dashTime: 0.3
+  dashForce: 20
   delay: 1
-  IsDashing: 1
+  IsDashing: 0
 --- !u!1 &748450680
 GameObject:
   m_ObjectHideFlags: 0
@@ -1758,7 +1758,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1774033207}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.233, y: 0, z: 0.234}
   m_LocalScale: {x: 1, y: 1.3375, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

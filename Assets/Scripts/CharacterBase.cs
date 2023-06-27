@@ -25,11 +25,9 @@ public class CharacterBase : MonoBehaviour
     }
 
     
-    public void Update()
+    public virtual void Update()
     {
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
-
-
 
         if (!isFacingRight && horizontal > 0f)
         {
@@ -39,6 +37,7 @@ public class CharacterBase : MonoBehaviour
         {
             Flip();
         }
+        print("Hola");
     }
 
     public void Jump(InputAction.CallbackContext context)
