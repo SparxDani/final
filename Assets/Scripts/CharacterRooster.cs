@@ -23,6 +23,7 @@ public class CharacterRooster : MonoBehaviour
     [Space]
     [Header("Current Confirmed Character")]
     public CharacterClass confirmedCharacter;
+    [SerializeField] SaveCharacter prefabPlayer;
     private void Awake()
     {
         instance = this;
@@ -104,6 +105,7 @@ public class CharacterRooster : MonoBehaviour
         if (confirmedCharacter == null)
         {
             confirmedCharacter = character;
+            prefabPlayer.playerPrefab = character.characterPrefab;
         }
     }
 
