@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.TextCore.Text;
@@ -13,6 +14,7 @@ public class Pointer : MonoBehaviour
 
     public Transform token;
     public bool hasToken;
+    public SaveCharacter carga;
 
     void Start()
     {
@@ -30,6 +32,10 @@ public class Pointer : MonoBehaviour
             {
                 TokenFollow(false);
                 CharacterRooster.instance.ConfirmCharacter(0, CharacterRooster.instance.characters[currentCharacter.GetSiblingIndex()]);
+                //carga.playerPrefab = graphicRay.gameObject;
+
+                print("Seleccionado");
+
             }
         }
 
@@ -96,6 +102,7 @@ public class Pointer : MonoBehaviour
             CharacterRooster.instance.ShowCharacterInSlot(0, null);
 
         }
+        
     }
     void TokenFollow(bool trigger)
     {

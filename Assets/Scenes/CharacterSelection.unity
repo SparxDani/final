@@ -457,6 +457,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 675870000}
     m_Modifications:
     - target: {fileID: 2362188460045833707, guid: 30d95773d1d181f40a55cf753ebc6b51, type: 3}
+      propertyPath: carga
+      value: 
+      objectReference: {fileID: 11400000, guid: 1fb5be8683d5fcd49bf6e25e07b73398, type: 2}
+    - target: {fileID: 2362188460045833707, guid: 30d95773d1d181f40a55cf753ebc6b51, type: 3}
       propertyPath: token
       value: 
       objectReference: {fileID: 1555951348}

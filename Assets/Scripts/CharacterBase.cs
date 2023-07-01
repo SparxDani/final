@@ -10,21 +10,21 @@ public class CharacterBase : MonoBehaviour
     public Transform groundCheck;
     public LayerMask groundLayer;
 
-    public float horizontal;
     private float raycastLenght;
     private bool isJumping = false;
     private bool isFacingRight = true;
     private int jumpsRemaining = 2;
-
+    public InputManagerController manager;
     public float speed = 8f;
     public float JumpingPower = 9.5f;
+    public float horizontal;
 
     public void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    
+
     public virtual void Update()
     {
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
@@ -62,7 +62,7 @@ public class CharacterBase : MonoBehaviour
 
     public bool IsGrounded()
     {
-        return Physics2D.Raycast(groundCheck.position,Vector2.down, raycastLenght, groundLayer);
+        return Physics2D.Raycast(groundCheck.position, Vector2.down, raycastLenght, groundLayer);
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
