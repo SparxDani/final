@@ -18,7 +18,6 @@ public class CharacterBase : MonoBehaviour
     public float speed = 8f;
     public float JumpingPower = 9.5f;
     public float horizontal;
-    [SerializeField] GameObject golpeprefab;
 
     public void Awake()
     {
@@ -46,11 +45,7 @@ public class CharacterBase : MonoBehaviour
         {
             transform.rotation = Quaternion.Euler(new Vector2(0, 180));
         }
-        if (Input.GetKey(KeyCode.T))
-        {
-            golpeprefab.SetActive(true);
-            StartCoroutine(Golpe());
-        }
+        
             print("Hola");
     }
 
@@ -100,9 +95,5 @@ public class CharacterBase : MonoBehaviour
     {
         horizontal = context.ReadValue<Vector2>().x;
     }
-    IEnumerator Golpe()
-    {
-        yield return new WaitForSeconds(0.1f);
-        golpeprefab.SetActive(false);
-    }
+    
 }
