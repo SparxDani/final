@@ -1,55 +1,133 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static CharacterBase;
 
-public class CharacterBase : MonoBehaviour
+public class CharacterBase : MonoBehaviour, IPlayerController
 {
     //Declaración de variables
     public Rigidbody2D rb;
-    public Transform groundCheck;
-    public LayerMask groundLayer;
+    //public Transform groundCheck;
+    //public LayerMask groundLayer;
 
-    private float raycastLenght;
+    /*private float raycastLenght;
     private bool isJumping = false;
     private bool isFacingRight = true;
     private int jumpsRemaining = 2;
-    public InputManagerController manager;
-    public float speed = 8f;
+    //public InputManagerController manager;
     public float JumpingPower = 9.5f;
-    public float horizontal;
+    public float horizontal;*/
+
+
+    private float time;
+    private CapsuleCollider2D capCol;
+
+    //Inputs
+    private Inputs _inputs;
+    private bool snapInput = true;
+    private Vector2 frameVelocity;
+    private Players controls;
+
+    //Movement
+    [SerializeField] private float maxSpeed = 8f;
+    [SerializeField] private float acceleration = 100;
+    [SerializeField] private float VdeadZoneLimit = 0.5f;
+    [SerializeField] private float HdeadZoneLimit = 0.1f;
+    [SerializeField] private bool grounded;
+    [SerializeField] private float groundDeceleration = 50;
+    [SerializeField] private float airDeceleration = 20;
+    private bool queryColliders;
+
+    public Vector2 Inputs => _inputs.movement;
 
     public void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        controls = new Players();
+        controls.Enable();
+        queryColliders = Physics2D.queriesStartInColliders;
     }
 
-
-    public virtual void Update()
+    private void Update()
     {
-        rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+        time = Time.deltaTime;
+        ReadInput();
+    }
+    private void OnDisable()
+    {
+        controls.Disable();
+    }
+    private void ReadInput()
+    {
+        _inputs = new Inputs
+        {
+            jumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
+            jumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
+            movement = controls.Ingame.Movement.ReadValue<Vector2>()
+        };
 
-        /*if (!isFacingRight && horizontal > 0f)
+        if (snapInput)
         {
-            Flip();
+            _inputs.movement.x = Mathf.Abs(_inputs.movement.x) < HdeadZoneLimit ? 0 : Mathf.Sign(_inputs.movement.x);
+            _inputs.movement.y = Mathf.Abs(_inputs.movement.y) < VdeadZoneLimit ? 0 : Mathf.Sign(_inputs.movement.y);
         }
-        else if (isFacingRight && horizontal < 0f)
+
+    }
+    public void FixedUpdate()
+    {
+        Direction();
+        Move();
+    }
+    private void Direction()
+    {
+        if(_inputs.movement.x == 0)
         {
-            Flip();
-        }*/
-        if (horizontal == 1)
-        {
-            transform.rotation = Quaternion.Euler(new Vector2(0, 0));
+            var decelerate = grounded ? groundDeceleration : airDeceleration;
+            frameVelocity.x = Mathf.MoveTowards(frameVelocity.x, 0, Time.deltaTime);
         }
-        else if (horizontal == -1)
+        else
         {
-            transform.rotation = Quaternion.Euler(new Vector2(0, 180));
+            frameVelocity.x = Mathf.MoveTowards(frameVelocity.x, _inputs.movement.x * maxSpeed, acceleration * Time.fixedDeltaTime);
         }
-        
-            print("Hola");
     }
 
-    public void Jump(InputAction.CallbackContext context)
+    public void Move()
+    {
+        rb.velocity = frameVelocity;
+    }
+    /*private void OnEnable()
+    {
+        movementInput.Enable();
+        movementInput.Ingame.Movement.performed += Movement_performed;
+        movementInput.Ingame.Movement.canceled += Movement_canceled;
+    }
+
+    private void OnDisable()
+    {
+        movementInput.Disable();
+        movementInput.Ingame.Movement.performed -= Movement_performed;
+        movementInput.Ingame.Movement.canceled -= Movement_canceled;
+    }
+
+    private void Movement_canceled(InputAction.CallbackContext obj)
+    {
+        //movementMap = Vector2.zero;
+        movementMap = obj.ReadValue<Vector2>();
+        //horizontal = context.ReadValue<Vector2>().x;
+        if (movementMap != null ) { }
+    }
+
+    private void Movement_performed(InputAction.CallbackContext obj)
+    {
+        movementMap = obj.ReadValue<Vector2>();
+    }*/
+
+
+
+
+    /*public void Jump(InputAction.CallbackContext context)
     {
         if (context.performed && IsGrounded())
         {
@@ -90,10 +168,15 @@ public class CharacterBase : MonoBehaviour
         localScale.x *= -1f;
         transform.localScale = localScale;
     }
-
-    public void Move(InputAction.CallbackContext context)
-    {
-        horizontal = context.ReadValue<Vector2>().x;
-    }
-    
+    */
+}
+public struct Inputs
+{
+    public bool jumpDown;
+    public bool jumpHeld;
+    public Vector2 movement;
+}
+public interface IPlayerController
+{
+    public Vector2 Inputs { get; }
 }

@@ -35,11 +35,11 @@ public class dashin : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.P)) 
         {
-            StartCoroutine(Dash());
+            //StartCoroutine(Dash());
         }
     }
 
-    private IEnumerator Dash()
+    /*private IEnumerator Dash()
     {
         if (character.horizontal != 0)
         {
@@ -60,6 +60,6 @@ public class dashin : MonoBehaviour
             yield return new WaitForSeconds(delay);
             canDash = true;
         }
-    }
+    }*/
 
 }
