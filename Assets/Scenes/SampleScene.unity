@@ -133,11 +133,10 @@ GameObject:
   m_Component:
   - component: {fileID: 152761764}
   - component: {fileID: 152761763}
-  - component: {fileID: 152761762}
   - component: {fileID: 152761761}
   m_Layer: 6
   m_Name: Square (2)
-  m_TagString: Ground
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -187,33 +186,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &152761762
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 152761760}
-  m_BodyType: 2
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!212 &152761763
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -797,7 +769,7 @@ Transform:
   m_GameObject: {fileID: 1045886522}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.642443, y: 1.642443, z: 1.642443}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1227,10 +1199,9 @@ GameObject:
   - component: {fileID: 1682927618}
   - component: {fileID: 1682927614}
   - component: {fileID: 1682927619}
-  - component: {fileID: 1682927620}
   m_Layer: 0
   m_Name: Taki
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1290,14 +1261,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f27ccfe09f12f74cac884174f7881bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 1682927614}
-  maxSpeed: 8
-  acceleration: 50
-  VdeadZoneLimit: 0.5
+  PlayerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  snapInput: 1
+  VdeadZoneLimit: 0.3
   HdeadZoneLimit: 0.1
-  grounded: 0
+  maxSpeed: 10
+  acceleration: 100
   groundDeceleration: 40
   airDeceleration: 30
+  groundedForce: -1.5
+  groundDistanceDetection: 0.1
+  initialJumpForce: 32
+  fallingMaxSpeed: 32
+  fallingAccel: 96
+  endJumpEarlyModifier: 6
+  CoyoteJump: 0.5
+  BufferJump: 0.5
 --- !u!70 &1682927619
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1333,64 +1314,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.93, y: 1.49}
   m_Direction: 0
---- !u!114 &1682927620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1682927611}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 0ef9a197114f22949b71c793e398c822, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1682927618}
-        m_TargetAssemblyTypeName: CharacterBase, Assembly-CSharp
-        m_MethodName: Move
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: aca06698-694a-45ef-b078-e48d270e322d
-    m_ActionName: Ingame/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 6c073cf9-1a33-4fe6-a3e9-0135de859b53
-    m_ActionName: Ingame/Jump[/Keyboard/space]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 21126551-ac24-4676-a1e1-23dfcc8fbfb6
-    m_ActionName: Menu/Navigation[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: dd170309-670b-4c7c-9062-886946955e7d
-    m_ActionName: Menu/Actions[/Keyboard/p,/Keyboard/o]
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Ingame
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1 &1761446418
 GameObject:
   m_ObjectHideFlags: 0
