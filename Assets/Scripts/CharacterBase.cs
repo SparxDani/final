@@ -1,222 +1,280 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.ShaderGraph;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class CharacterBase : MonoBehaviour, IPlayerController
+public class CharacterBase : MonoBehaviour
 {
-    [Header("Inputs Settings")]
-    [SerializeField] private LayerMask PlayerLayer;
-    [SerializeField] private bool snapInput = true; 
-    [SerializeField] private float VdeadZoneLimit = 0.5f;
-    [SerializeField] private float HdeadZoneLimit = 0.1f;
-    
     private Rigidbody2D rb;
-    private float time;
-    private CapsuleCollider2D capCol;
-    private Inputs _inputs;
-    private Vector2 frameVelocity;
-    private Players controls;
-    
-
 
     [Header("Character Movement")]
-    [SerializeField] private float maxSpeed = 8f;
-    [SerializeField] private float acceleration = 100;
-    [SerializeField] private float groundDeceleration = 50;
-    [SerializeField] private float airDeceleration = 20;
-    [SerializeField] private float groundedForce = -2f;
-    [SerializeField] private float groundDistanceDetection = 0.10f;
-
-    private bool grounded;
-    private bool queryColliders;
-    private float frameLeftGrounded = float.MinValue;
-
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float acceleration = 10;
+    [SerializeField] private float deceleration = 15f;
+    [SerializeField] private float groundCheckRadius;
 
     [Header("Character Jumping")]
-    [SerializeField] private float initialJumpForce = 32;
-    [SerializeField] private float fallingMaxSpeed;
-    [SerializeField] private float fallingAccel = 98.7f;
-    [SerializeField] private float endJumpEarlyModifier;
-    [SerializeField] private float CoyoteJump;
-    [SerializeField] private float BufferJump;
+    [SerializeField] private int totalJumps = 2;
+    [SerializeField] private float initialJumpForce = 16;
+    [SerializeField] private float airDragMultiplier = 0.95f;
+    [SerializeField] private float jumpHeighMultiplier = 0.5f;
+    [SerializeField] private float jumpTimerSet = 0.15f;
+    [SerializeField] private float jumpTimer;
 
-    private bool coyoteUsable;
-    private float timeJumpWasPressed;
-    private bool jumpToConsume;
+    private int jumpsLeft;
+
+    [Header("Character Dashin")]
+    [SerializeField] private float dashSpeed = 10f;
+    [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] private float dashCD = 1f;
+    private bool isDashing = false;
+    private bool isDashCooldown = false;
+    private bool canDash = true;
+
+    [Header("Knockback")]
+    [SerializeField] private Transform objectCenter;
+    [SerializeField] public float knockbackVel = 5f;
+    [SerializeField] private float knockbackTime = 1f;
+    private bool knockbacked;
+
+
+    public float baseGravity = 6f;
+    //public float maxFallSpeed = 18f;
+    public float fallGravityMult = 2f;
+
+    private float movementInput;
+    
+    private bool attempToJump;
+    private bool normalJump;
     private bool bufferedJumpUsable;
-    private bool endedJumpEarly;
 
 
-    private bool HasBufferedJump => bufferedJumpUsable && time < timeJumpWasPressed + BufferJump;
-    private bool CanUseCoyote => coyoteUsable && !grounded && time < frameLeftGrounded + CoyoteJump;
-
-    public Vector2 Inputs => _inputs.movement;
-    public event Action<bool, float> GroundedChanged;
-    public event Action Jumped;
+    private bool isGrounded;
+    private bool canMove;
+    public Transform groundCheck;
+    public LayerMask whatIsGround;
 
 
-    public void Awake()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        capCol = GetComponent<CapsuleCollider2D>();
-        queryColliders = Physics2D.queriesStartInColliders;
+        jumpsLeft = totalJumps;
 
-        controls = new Players();
-        controls.Enable();
     }
-
     private void Update()
     {
-        time += Time.deltaTime;
-        ReadInput();
-    }
-    private void OnDisable()
-    {
-        controls.Disable();
-    }
-    private void ReadInput()
-    {
-        _inputs = new Inputs
+        if (jumpTimer >= 0)
         {
-            jumpDown = controls.Ingame.Jump.triggered,
-            jumpHeld = controls.Ingame.Jump.ReadValue<float>() > 0.1f,
-            movement = controls.Ingame.Movement.ReadValue<Vector2>()
-        };
-
-        if (snapInput)
-        {
-            _inputs.movement.x = Mathf.Abs(_inputs.movement.x) < HdeadZoneLimit ? 0 : Mathf.Sign(_inputs.movement.x);
-            _inputs.movement.y = Mathf.Abs(_inputs.movement.y) < VdeadZoneLimit ? 0 : Mathf.Sign(_inputs.movement.y);
+            jumpTimer -= Time.deltaTime;
+            if (jumpTimer <= 0)
+            {
+                canMove = true;
+            }
         }
-        if (_inputs.jumpDown)
-        {
-            jumpToConsume = true;
-            timeJumpWasPressed = time;
-        }
-
-    }
-    public void FixedUpdate()
-    {
-        Collisions();
-
-        HandleJump();
-        Direction();
+        CheckIfCanJump();
+        CheckJump();
         Gravity();
-
-        Move();
+        if (isDashing && !isDashCooldown)
+        {
+            StartCoroutine(DashCooldown());
+        }
     }
-
-    private void Collisions()
+    private void FixedUpdate()
     {
-        Physics2D.queriesStartInColliders = false;
-        bool groundHit = Physics2D.CapsuleCast(capCol.bounds.center, capCol.size, capCol.direction, 0, Vector2.down, groundDistanceDetection, ~PlayerLayer);
-        bool ceilingHit = Physics2D.CapsuleCast(capCol.bounds.center, capCol.size, capCol.direction, 0, Vector2.up, groundDistanceDetection, ~PlayerLayer);
-
-        if(ceilingHit)
+        if (!isDashing)
         {
-            frameVelocity.y = Mathf.Min(0, frameVelocity.y);
+            ApplyMovement();
         }
-
-        if (!grounded && groundHit)
-        {
-            grounded = true;
-            coyoteUsable = true;
-            bufferedJumpUsable = true;
-            endedJumpEarly = false;                                                                 
-            GroundedChanged?.Invoke(true, Mathf.Abs(frameVelocity.y));
-
-
-        }
-        else if (grounded && !groundHit)
-        {
-            grounded = false;
-            frameLeftGrounded = time;
-            GroundedChanged?.Invoke(false, 0);
-        }
-
-        Physics2D.queriesStartInColliders = queryColliders;
+        CheckSurroundings();
 
     }
 
-    
 
-
-    private void HandleJump()
+    public void OnMove(InputAction.CallbackContext context)
     {
-        if (!endedJumpEarly && !grounded && !_inputs.jumpHeld && rb.velocity.y > 0)
-        {
-            endedJumpEarly = true;
-        }
+        movementInput = context.ReadValue<Vector2>().x;
 
-        if (!jumpToConsume && !HasBufferedJump)
+    }
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed)
         {
-            return;
-        }
+            if (isGrounded || totalJumps > 0)
+            {
+                NormalJump();
 
-        if (grounded || CanUseCoyote)
+            }
+            else
+            {
+                jumpTimer = jumpTimerSet;
+                attempToJump = true;
+            }
+        }
+        
+        else if ( context.canceled && bufferedJumpUsable && rb.velocity.y > 0)
         {
-            ExecuteJump();
+            bufferedJumpUsable = false;
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * jumpHeighMultiplier);
+            Debug.Log("Buffered");
         }
+    }
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        if (context.performed && !isDashing && !isDashCooldown)
+        {
+            StartCoroutine(StartDash());
+        }
+    }
+    public void OnHardFall(InputAction.CallbackContext context)
+    {
+        /*if(context.performed && canDash)
+        {
+            StartCoroutine(HardFall());
+            Debug.Log("HardFalling");
+        }*/
 
-        jumpToConsume = false;
     }
 
-    private void ExecuteJump()
+    public void OnPunch(InputAction.CallbackContext context)
     {
-        endedJumpEarly = false;
-        timeJumpWasPressed = 0;
-        bufferedJumpUsable = false;
-        coyoteUsable = false;
-        frameVelocity.y = initialJumpForce;
-        Jumped?.Invoke();
+        //KnockBack();
     }
-    private void Direction()
+
+    private void ApplyMovement()
     {
-        if (_inputs.movement.x == 0)
+        if (!isGrounded && movementInput == 0)
         {
-            var decelerate = grounded ? groundDeceleration : airDeceleration;
-            frameVelocity.x = Mathf.MoveTowards(frameVelocity.x, 0, decelerate * Time.fixedDeltaTime);
+            rb.velocity = new Vector2(rb.velocity.x * airDragMultiplier, rb.velocity.y);
         }
-        else
+        else if(canMove)
         {
-            frameVelocity.x = Mathf.MoveTowards(frameVelocity.x, _inputs.movement.x * maxSpeed, acceleration * Time.fixedDeltaTime);
+            rb.velocity = new Vector2(moveSpeed * movementInput, rb.velocity.y);
+        }
+        else if (knockbacked)
+        {
+            rb.velocity = new Vector2(Mathf.Lerp(rb.velocity.x, 0f, Time.deltaTime * 3), rb.velocity.y);
         }
     }
     private void Gravity()
     {
-        if (grounded && frameVelocity.y <= 0f)
+        if (rb.velocity.y < 0)
         {
-            frameVelocity.y = groundedForce;
+            rb.gravityScale = baseGravity * 1.3f;
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -initialJumpForce));
         }
         else
         {
-            var gravityInAir = fallingAccel;
-            if (endedJumpEarly && frameVelocity.y > 0)
-            {
-                gravityInAir *= endJumpEarlyModifier;
-            }
-            frameVelocity.y = Mathf.MoveTowards(frameVelocity.y, -fallingMaxSpeed, gravityInAir * Time.fixedDeltaTime);
+            rb.gravityScale = baseGravity;
         }
     }
-    private void Move()
+    private void CheckSurroundings()
     {
-        rb.velocity = frameVelocity;
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+    }
+    private void NormalJump()
+    {
+        if (normalJump)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, initialJumpForce);
+            jumpsLeft--;
+            jumpTimer = 0;
+            attempToJump = false;
+            bufferedJumpUsable = true;
+            Debug.Log("Jump");
+
+        }
+    }
+    private void CheckIfCanJump()
+    {
+        if (isGrounded && rb.velocity.y <= 0.01f)
+        {
+            jumpsLeft = totalJumps;
+        }
+        if (jumpsLeft <= 0)
+        {
+            normalJump = false;
+        }
+        else
+        {
+            normalJump = true;
+        }
+    }
+    private void CheckJump()
+    {
+
+        if (jumpTimer > 0)
+        {
+            if (isGrounded)
+            {
+                NormalJump();
+            }
+        }
+        if (attempToJump)
+        {
+            jumpTimer -= Time.deltaTime;
+        }
     }
 
-}
-public struct Inputs
-{
-    public bool jumpDown;
-    public bool jumpHeld;
-    public Vector2 movement;
-}
-public interface IPlayerController
-{
-    public Vector2 Inputs { get; }
-    public event Action<bool, float> GroundedChanged;
-    public event Action Jumped;
+    public void KnockBack(Transform transform)
+    {
+        Vector2 knockDirection = objectCenter.position - transform.position;
+        knockbacked = true;
+        rb.velocity = knockDirection.normalized * knockbackVel;
+        StartCoroutine(Unknockback());
+    }
+    public void UpdateKnockbackForce(float newForce)
+    {
+        knockbackVel = newForce;
+    }
+    public IEnumerator Unknockback()
+    {
+        yield return new WaitForSeconds(knockbackTime);
+        knockbacked = false;
+    }
+    private IEnumerator HardFall()
+    {
+        canMove = false;
+        canDash = false;
+        rb.gravityScale = 10;
+        rb.velocity = new Vector2(movementInput, 1);
+        yield return new WaitForSeconds(dashDuration);
+        rb.velocity = Vector2.zero;
 
+        canDash = true;
+        canMove = true;
+        rb.gravityScale = baseGravity;
+
+    }
+    private IEnumerator StartDash()
+    {
+        if (!isDashing && !isDashCooldown)
+        {
+            isDashing = true;
+            rb.gravityScale = 0;
+            rb.velocity = new Vector2(movementInput,0) * dashSpeed;
+            yield return new WaitForSeconds(dashDuration);
+            rb.velocity = Vector2.zero;
+            rb.gravityScale = baseGravity;
+
+            isDashing = false;
+            StartCoroutine(DashCooldown());
+        }
+    }
+
+    private IEnumerator DashCooldown()
+    {
+        isDashCooldown = true;
+        yield return new WaitForSeconds(dashCD);
+        isDashCooldown = false;
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+    }
 }

@@ -1,5 +1,5 @@
 {
-    "name": "Players",
+    "name": "PlayerInput",
     "maps": [
         {
             "name": "Ingame",
@@ -15,9 +15,27 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "ForceFall",
+                    "type": "Button",
+                    "id": "7727fdd1-b682-49cd-9aaf-50e1d9dba81a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Jump",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "6c073cf9-1a33-4fe6-a3e9-0135de859b53",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Dash",
+                    "type": "Button",
+                    "id": "0bf6bc21-5bfd-4ad5-aadd-64b67e04e952",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -40,17 +58,6 @@
                     "name": "up",
                     "id": "900faf8d-251a-42c6-850d-b5b16055ed9e",
                     "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Down",
-                    "id": "ea5bfa3a-d694-4396-90e8-08637b02279a",
-                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -82,12 +89,89 @@
                 },
                 {
                     "name": "",
+                    "id": "118f087f-3839-42ba-91a1-1281813f01ca",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8df972be-7e29-4be3-bd6a-b2ceac9637c0",
-                    "path": "<Keyboard>/space",
+                    "path": "<Keyboard>/o",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6cf07fd4-ca25-4aaf-b1f5-092a347ea975",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c5b4ae54-cec1-4233-8b4f-2487571ca17a",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9c5d0201-39e5-413f-a0a3-0b44d0487769",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8dc84788-d7c1-4698-b09a-a7cea6affc5a",
+                    "path": "<Gamepad>/leftStick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ForceFall",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d21b9d26-3add-4dfc-b0d6-0af318b3a5fd",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ForceFall",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "48f4fc4a-e6a4-4e3f-b9d0-fa4f516e26ac",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ForceFall",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
