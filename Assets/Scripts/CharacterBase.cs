@@ -10,12 +10,15 @@ using UnityEngine.InputSystem;
 public class CharacterBase : MonoBehaviour
 {
     private Rigidbody2D rb;
+    [SerializeField] private Vector2 resetPosition = new Vector2(0f, 0f);
+    [SerializeField] private int lifes = 3;
 
     [Header("Character Movement")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float acceleration = 10;
     [SerializeField] private float deceleration = 15f;
     [SerializeField] private float groundCheckRadius;
+    private bool facingRight = true;
 
     [Header("Character Jumping")]
     [SerializeField] private int totalJumps = 2;
@@ -38,8 +41,14 @@ public class CharacterBase : MonoBehaviour
     [Header("Knockback")]
     [SerializeField] private Transform objectCenter;
     [SerializeField] public float knockbackVel = 5f;
+    [SerializeField] public float knockbackInit;
     [SerializeField] private float knockbackTime = 1f;
+    [SerializeField] private GameObject punchCollider;
+    private bool canPunch;
     private bool knockbacked;
+
+    private Animator animator;
+
 
 
     public float baseGravity = 6f;
@@ -52,8 +61,10 @@ public class CharacterBase : MonoBehaviour
     private bool normalJump;
     private bool bufferedJumpUsable;
 
-
+    private bool isWalking;
+    private bool isKnockbacked;
     private bool isGrounded;
+    private bool isPunching;
     private bool canMove;
     public Transform groundCheck;
     public LayerMask whatIsGround;
@@ -63,7 +74,17 @@ public class CharacterBase : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         jumpsLeft = totalJumps;
+        knockbackInit = knockbackVel;
 
+    }
+    private void Start()
+    {
+        if (punchCollider == null)
+        {
+            enabled = false; 
+        }
+        animator = GetComponent<Animator>();
+        punchCollider.SetActive(false);
     }
     private void Update()
     {
@@ -75,6 +96,10 @@ public class CharacterBase : MonoBehaviour
                 canMove = true;
             }
         }
+        if (lifes == 0)
+        {
+            Debug.Log("Moriste");
+        }
         CheckIfCanJump();
         CheckJump();
         Gravity();
@@ -82,17 +107,31 @@ public class CharacterBase : MonoBehaviour
         {
             StartCoroutine(DashCooldown());
         }
+        if(!canPunch)
+        {
+            StartCoroutine(ResetPunch());
+        }
+        UpdateAnimations();
     }
     private void FixedUpdate()
     {
         if (!isDashing)
         {
             ApplyMovement();
+            FlipCharacter();
         }
         CheckSurroundings();
 
     }
-
+    private void UpdateAnimations()
+    {
+        animator.SetBool("isWalking", isWalking);
+        animator.SetBool("isGrounded", isGrounded);
+        animator.SetFloat("yVelocity", rb.velocity.y);
+        animator.SetBool("isPunching", isPunching);
+        animator.SetBool("isKnockbacked", isKnockbacked);
+        animator.SetBool("isDashing", isDashing);
+    }
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -141,7 +180,12 @@ public class CharacterBase : MonoBehaviour
 
     public void OnPunch(InputAction.CallbackContext context)
     {
-        //KnockBack();
+        if (canPunch && context.performed)
+         {
+             StartCoroutine(ActivateObjectPunch());
+             
+         }
+        Debug.Log("Punch");
     }
 
     private void ApplyMovement()
@@ -149,14 +193,35 @@ public class CharacterBase : MonoBehaviour
         if (!isGrounded && movementInput == 0)
         {
             rb.velocity = new Vector2(rb.velocity.x * airDragMultiplier, rb.velocity.y);
+            isWalking = false;
         }
-        else if(canMove)
+        else
         {
-            rb.velocity = new Vector2(moveSpeed * movementInput, rb.velocity.y);
+            isWalking = true;
         }
-        else if (knockbacked)
+        if (canMove)
         {
-            rb.velocity = new Vector2(Mathf.Lerp(rb.velocity.x, 0f, Time.deltaTime * 3), rb.velocity.y);
+            
+
+            if (!knockbacked)
+            {
+                rb.velocity = new Vector2(moveSpeed * movementInput, rb.velocity.y);
+            }
+            else
+            {
+                rb.velocity = new Vector2(Mathf.Lerp(rb.velocity.x, 0f, Time.deltaTime * 3), rb.velocity.y);
+            }
+        }
+    }
+    private void FlipCharacter()
+    {
+        if ((movementInput > 0 && !facingRight) || (movementInput < 0 && facingRight))
+        {
+            facingRight = !facingRight;
+
+            Vector3 newScale = transform.localScale;
+            newScale.x *= -1;
+            transform.localScale = newScale;
         }
     }
     private void Gravity()
@@ -235,6 +300,19 @@ public class CharacterBase : MonoBehaviour
         yield return new WaitForSeconds(knockbackTime);
         knockbacked = false;
     }
+    private IEnumerator ActivateObjectPunch()
+    {
+        punchCollider.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        punchCollider.SetActive(false);
+        canPunch = false;
+    }
+
+    private IEnumerator ResetPunch()
+    {
+        yield return new WaitForSeconds(0.25f);
+        canPunch = true;
+    }
     private IEnumerator HardFall()
     {
         canMove = false;
@@ -272,7 +350,15 @@ public class CharacterBase : MonoBehaviour
         isDashCooldown = false;
     }
 
-
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Limit"))
+        {
+            lifes--;
+            transform.position = resetPosition;
+            knockbackVel = knockbackInit;
+        }
+    }
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);

@@ -9,7 +9,16 @@ public class PointerMovement : MonoBehaviour
 
     private Vector2 movementInput;
 
-    private void Update()
+    private void FixedUpdate()
+    {
+        UpdateMovement();
+    }
+    public void OnMovement(InputAction.CallbackContext context)
+    {
+        movementInput = context.ReadValue<Vector2>();
+        
+    }
+    private void UpdateMovement()
     {
         float x = movementInput.x;
         float y = movementInput.y;
@@ -18,14 +27,7 @@ public class PointerMovement : MonoBehaviour
 
         Vector3 worldSize = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
 
-        transform.position = new Vector3(
-            Mathf.Clamp(transform.position.x, -worldSize.x, worldSize.x),
-            Mathf.Clamp(transform.position.y, -worldSize.y, worldSize.y),
-            transform.position.z);
+        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -worldSize.x, worldSize.x), Mathf.Clamp(transform.position.y, -worldSize.y, worldSize.y), transform.position.z);
     }
 
-    public void OnMovement(InputValue value)
-    {
-        movementInput = value.Get<Vector2>();
-    }
 }
